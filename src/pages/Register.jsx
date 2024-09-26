@@ -1,6 +1,7 @@
 import React, { useRef } from 'react'
 import { signUpUser, uploadImage } from '../config/firebasemethods'
 import { useNavigate } from 'react-router-dom'
+let userData;
 
 const Register = () => {
   const fullName = useRef()
@@ -19,7 +20,7 @@ const Register = () => {
 
     const userProfileImageUrl = await uploadImage(profileImage.current.files[0], email.current.value)
     try {
-      const userData = await signUpUser({
+      userData = await signUpUser({
         email: email.current.value,
         password: password.current.value,
         fullName: fullName.current.value,
@@ -49,3 +50,5 @@ const Register = () => {
 }
 
 export default Register
+
+export { userData}

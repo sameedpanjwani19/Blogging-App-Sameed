@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'; 
 import { userLogin } from './Login';
+import {userData} from './Register';
+
 
 
 const Profile = () => {
@@ -10,11 +12,12 @@ const Profile = () => {
   useEffect(() => {
 
     console.log(userLogin);
+    console.log(userData);
 
 
     const fetchProfileData = async () => {
       try {
-        const response = await userLogin;
+        const response = await userLogin || userData;
         setProfileData(response);
         setLoading(false);
       } catch (error) {

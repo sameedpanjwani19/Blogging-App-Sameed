@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from "react-hook-form"
 import { auth, getData, sendData } from '../config/firebasemethods'
 import { onAuthStateChanged } from 'firebase/auth'
+import {userData} from './Register';
+
 
 import { userLogin } from './Login';
 
@@ -30,7 +32,7 @@ const Dashboard = () => {
 
           const fetchProfileData = async () => {
             try {
-              const response = await userLogin;
+              const response = await userLogin || userData;
               setProfileData(response);
             } catch (error) {
               console.log(error);
