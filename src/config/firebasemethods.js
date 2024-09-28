@@ -174,6 +174,33 @@ import {
       throw new Error(error.message);
     }
   }
+
+  
+  async function uploadBlogImage(file) {
+    if (!file) {
+      throw new Error("No file provided for upload");
+    }
+  
+    try {
+      // Create a reference to a specific folder and file in Firebase Storage
+      const storageRef = ref(storage, `blogImages/${Date.now()}_${file.name}`);
+      
+      // Upload the file to this non-root reference
+      const uploadResult = await uploadBytes(storageRef, file);
+      
+      // Retrieve the download URL after the upload is complete
+      const url = await getDownloadURL(uploadResult.ref);
+      
+      console.log("File available at:", url);
+      return url;
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      throw new Error(error.message);
+    }
+  }
+
+  
+  
   
   export {
     auth,
@@ -190,5 +217,6 @@ import {
     collection,
     doc,
     getDocs,
+    uploadBlogImage
   };
   
