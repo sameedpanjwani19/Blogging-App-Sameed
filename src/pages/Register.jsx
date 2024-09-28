@@ -1,33 +1,37 @@
-import React, { useRef } from 'react';
+import React from 'react';
+import { useForm } from 'react-hook-form';
 import { signUpUser, uploadImage } from '../config/firebasemethods';
 import { useNavigate } from 'react-router-dom';
+
 let userData;
 
 const Register = () => {
-  const fullName = useRef();
-  const email = useRef();
-  const password = useRef();
-  const profileImage = useRef();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+    setValue,
+  } = useForm({
+    mode: 'onChange', // Validate form as user types
+  });
 
   const navigate = useNavigate();
 
-  const loginUserFromFirebase = async (event) => {
-    event.preventDefault();
-    console.log(email.current.value);
-    console.log(password.current.value);
-    console.log(fullName.current.value);
-    console.log(profileImage.current.files[0]);
-
-    const userProfileImageUrl = await uploadImage(profileImage.current.files[0], email.current.value);
+  const loginUserFromFirebase = async (data) => {
+    const { fullName, email, password, profileImage } = data;
     try {
+      // Upload image to Firebase
+      const userProfileImageUrl = await uploadImage(profileImage[0], email);
+
+      // Sign up user in Firebase
       userData = await signUpUser({
-        email: email.current.value,
-        password: password.current.value,
-        fullName: fullName.current.value,
+        fullName,
+        email,
+        password,
         profileImage: userProfileImageUrl,
       });
-      navigate('/');
 
+      navigate('/');
     } catch (error) {
       console.error(error);
     }
@@ -40,15 +44,16 @@ const Register = () => {
           <div className="card shadow-lg border-0 rounded">
             <div className="card-body">
               <h3 className="card-title text-center mb-4">Register</h3>
-              <form onSubmit={loginUserFromFirebase}>
+              <form onSubmit={handleSubmit(loginUserFromFirebase)}>
                 <div className="mb-3">
                   <label htmlFor="fullName" className="form-label">Full Name</label>
                   <input
                     type="text"
                     className="form-control"
                     placeholder="Enter your full name"
-                    ref={fullName}
+                    {...register('fullName', { required: 'Full Name is required' })}
                   />
+                  {errors.fullName && <p style={{ color: 'red' }}>{errors.fullName.message}</p>}
                 </div>
 
                 <div className="mb-3">
@@ -57,8 +62,15 @@ const Register = () => {
                     type="email"
                     className="form-control"
                     placeholder="Enter your email"
-                    ref={email}
+                    {...register('email', {
+                      required: 'Email is required',
+                      pattern: {
+                        value: /^\S+@\S+$/i,
+                        message: 'Invalid email address',
+                      },
+                    })}
                   />
+                  {errors.email && <p style={{ color: 'red' }}>{errors.email.message}</p>}
                 </div>
 
                 <div className="mb-3">
@@ -67,8 +79,15 @@ const Register = () => {
                     type="password"
                     className="form-control"
                     placeholder="Enter your password"
-                    ref={password}
+                    {...register('password', {
+                      required: 'Password is required',
+                      minLength: {
+                        value: 6,
+                        message: 'Password must be at least 6 characters',
+                      },
+                    })}
                   />
+                  {errors.password && <p style={{ color: 'red' }}>{errors.password.message}</p>}
                 </div>
 
                 <div className="mb-3">
@@ -76,12 +95,17 @@ const Register = () => {
                   <input
                     type="file"
                     className="form-control"
-                    ref={profileImage}
+                    {...register('profileImage', {
+                      required: 'Profile image is required',
+                    })}
                   />
+                  {errors.profileImage && (
+                    <p style={{ color: 'red' }}>{errors.profileImage.message}</p>
+                  )}
                 </div>
 
                 <div className="d-grid">
-                  <button type="submit" className="btn btn-primary">
+                  <button type="submit" className="btn btn-primary" disabled={!isValid}>
                     Register
                   </button>
                 </div>
@@ -95,4 +119,4 @@ const Register = () => {
 };
 
 export default Register;
-export {userData} ;
+export { userData };
