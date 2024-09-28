@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { signUpUser, uploadImage } from '../config/firebasemethods';
 import { useNavigate } from 'react-router-dom';
@@ -6,18 +6,19 @@ import { useNavigate } from 'react-router-dom';
 let userData;
 
 const Register = () => {
+  const [loading, setLoading] = useState(false); // State to track loading
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
-    setValue,
   } = useForm({
-    mode: 'onChange', // Validate form as user types
+    mode: 'onChange', // Validate form on change
   });
 
   const navigate = useNavigate();
 
   const loginUserFromFirebase = async (data) => {
+    setLoading(true); // Start loading
     const { fullName, email, password, profileImage } = data;
     try {
       // Upload image to Firebase
@@ -34,6 +35,8 @@ const Register = () => {
       navigate('/');
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false); // End loading
     }
   };
 
@@ -105,8 +108,12 @@ const Register = () => {
                 </div>
 
                 <div className="d-grid">
-                  <button type="submit" className="btn btn-primary" disabled={!isValid}>
-                    Register
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    disabled={!isValid || loading} // Disable when form is invalid or loading
+                  >
+                    {loading ? 'Registering...' : 'Register'}
                   </button>
                 </div>
               </form>
