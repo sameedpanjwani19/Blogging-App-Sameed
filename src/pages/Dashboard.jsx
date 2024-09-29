@@ -21,7 +21,7 @@ const Dashboard = () => {
     formState: { errors },
   } = useForm();
   const [blogs, setBlogs] = useState([]);
-  const [loading, setLoading] = useState(false); // New loading state
+  const [loading, setLoading] = useState(false); 
 
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
@@ -46,45 +46,44 @@ const Dashboard = () => {
   }, []);
 
   const sendDatatoFirestore = async (data) => {
-    setLoading(true); // Set loading to true when starting upload
+    setLoading(true); 
 
-    // Upload the image and get its URL
+
     const blogImageUrl = await uploadBlogImage(blogImage.current.files[0]);
 
     console.log(data);
     
     try {
-      // Send the blog data along with the image URL to Firestore
+
       const response = await sendData(
         {
           title: data.title,
           description: data.description,
           uid: auth.currentUser.uid,
           name: profileData.fullName,
-          blogImage: blogImageUrl, // Image URL is being sent here
+          blogImage: blogImageUrl, 
         },
-        "blogs" // Assuming 'blogs' is the Firestore collection name
+        "blogs"
       );
 
-      // Append the new blog to the local state
+
+
       blogs.push({
         title: data.title,
         description: data.description,
         uid: auth.currentUser.uid,
         name: profileData.fullName,
-        blogImage: blogImageUrl, // Include the image URL in the local state as well
+        blogImage: blogImageUrl, 
       });
-      setBlogs([...blogs]); // Update state
-
-      // Clear form inputs after successful submission
-      reset(); // Reset form fields
-      blogImage.current.value = null; // Clear the image input
+      setBlogs([...blogs]);
+      reset(); 
+      blogImage.current.value = null; 
 
       console.log(response);
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false); // Reset loading state once done
+      setLoading(false); 
     }
   };
 
@@ -143,7 +142,8 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* User Blogs Section */}
+
+
         <h1 className="text-center mb-4">User Blogs</h1>
         <div className="row">
           {blogs.length > 0 ? (

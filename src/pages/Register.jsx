@@ -6,25 +6,23 @@ import { useNavigate } from 'react-router-dom';
 let userData;
 
 const Register = () => {
-  const [loading, setLoading] = useState(false); // State to track loading
+  const [loading, setLoading] = useState(false); 
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
   } = useForm({
-    mode: 'onChange', // Validate form on change
+    mode: 'onChange',
   });
 
   const navigate = useNavigate();
 
   const loginUserFromFirebase = async (data) => {
-    setLoading(true); // Start loading
+    setLoading(true);
     const { fullName, email, password, profileImage } = data;
     try {
-      // Upload image to Firebase
       const userProfileImageUrl = await uploadImage(profileImage[0], email);
 
-      // Sign up user in Firebase
       userData = await signUpUser({
         fullName,
         email,
@@ -36,7 +34,7 @@ const Register = () => {
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false); // End loading
+      setLoading(false);
     }
   };
 
@@ -111,7 +109,7 @@ const Register = () => {
                   <button
                     type="submit"
                     className="btn btn-primary"
-                    disabled={!isValid || loading} // Disable when form is invalid or loading
+                    disabled={!isValid || loading}
                   >
                     {loading ? 'Registering...' : 'Register'}
                   </button>

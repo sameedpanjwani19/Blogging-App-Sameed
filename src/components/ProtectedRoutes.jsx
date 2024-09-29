@@ -5,8 +5,6 @@ import { useNavigate } from 'react-router-dom';
 
 const ProtectedRoutes = ({ component }) => {
     const [isUser, setIsUser] = useState(false);
-
-    // use navigate 
     const navigate = useNavigate()
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {

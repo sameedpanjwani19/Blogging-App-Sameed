@@ -18,7 +18,7 @@ const Login = () => {
 
   const loginUserFromFirebase = async (data, event) => {
     event.preventDefault();
-    setLoading(true); // Start loading
+    setLoading(true);
     try {
       userLogin = await loginUser({
         email: data.email,
