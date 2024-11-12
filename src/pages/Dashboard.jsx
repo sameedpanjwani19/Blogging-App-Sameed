@@ -7,8 +7,6 @@ import {
   uploadBlogImage,
 } from "../config/firebasemethods";
 import { onAuthStateChanged } from "firebase/auth";
-import { userData } from "./Register";
-import { userLogin } from "./Login";
 
 const Dashboard = () => {
   const blogImage = useRef();

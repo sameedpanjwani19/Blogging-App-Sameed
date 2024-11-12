@@ -84,4 +84,4 @@ const Login = () => {
 };
 
 export default Login;
-export  {userLogin};
+export {userLogin};

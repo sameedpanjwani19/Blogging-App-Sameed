@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { signUpUser, uploadImage } from '../config/firebasemethods';
 import { useNavigate } from 'react-router-dom';
-
 let userData;
+
 
 const Register = () => {
   const [loading, setLoading] = useState(false); 
